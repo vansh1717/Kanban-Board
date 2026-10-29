@@ -1,0 +1,426 @@
+
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+html {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+    /* Theme colors */
+    --bg-color: #0F172A;
+    --bg-btn-color: #1E293B;
+    --bg-task-color: #F8FAFC;
+    --primary-text-color: #F8FAFC;
+    --delete-btn-color: #DC2626;
+
+    /* New accent colors */
+    --accent-color: #6366F1;
+    --accent-hover: #4F46E5;
+    --column-border: #334155;
+    --task-text-color: #475569;
+    --muted-text-color: #94A3B8;
+    --modal-overlay: rgba(2, 6, 23, 0.75);
+
+    /* Column status colors */
+    --todo-color: #FBBF24;
+    --progress-color: #818CF8;
+    --done-color: #34D399;
+
+    /* Padding variables */
+    --nav-padding: 20px 30px;
+    --section-padding: 20px 30px;
+    --padding-sm: 5px;
+    --padding-md: 10px;
+    --padding-lg: 15px;
+    --padding-xl: 20px;
+    --padding-xxl: 30px;
+
+    /* Border radius */
+    --border-radius-sm: 5px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 15px;
+    --border-radius-xl: 20px;
+    --border-radius-xxl: 30px;
+
+    /* Shadows */
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--primary-text-color);
+}
+
+main {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+    padding: var(--nav-padding);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--padding-md);
+
+    background-color: #111C33;
+    border-bottom: 1px solid var(--column-border);
+}
+
+/* Kanban Board heading */
+nav .left {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    color: #FFFFFF;
+}
+
+nav .left::after {
+    content: ".";
+    color: var(--accent-color);
+}
+
+/* Add Task button */
+nav button {
+    background-color: var(--accent-color);
+    border: 1px solid transparent;
+    outline: none;
+    color: #FFFFFF;
+
+    padding: 11px 18px;
+    cursor: pointer;
+    border-radius: var(--border-radius-md);
+
+    font-size: 14px;
+    font-weight: 700;
+
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    transition: background-color 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+nav button:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+nav button:active {
+    transform: translateY(0);
+}
+
+/* =========================
+   BOARD
+========================= */
+
+section.board {
+    padding: var(--section-padding);
+    display: flex;
+    flex-grow: 1;
+    gap: var(--padding-xl);
+    align-items: stretch;
+}
+
+section .task-clm {
+    background-color: var(--bg-btn-color);
+    border: 1px solid var(--column-border);
+
+    flex: 1;
+    min-width: 0;
+    min-height: 350px;
+
+    border-radius: var(--border-radius-lg);
+    padding: var(--padding-lg);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-md);
+
+    transition: border-color 0.2s ease,
+                background-color 0.2s ease;
+}
+
+/* Highlight the drop target */
+section .task-clm.hover-over {
+    border: 2px dashed var(--accent-color);
+    background-color: #253450;
+}
+
+/* Column heading */
+section .task-clm .heading {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--padding-md);
+
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--column-border);
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Column-specific heading colors */
+#todo .heading .left {
+    color: var(--todo-color);
+}
+
+#progress .heading .left {
+    color: var(--progress-color);
+}
+
+#done .heading .left {
+    color: var(--done-color);
+}
+
+/* Number-only counter */
+section .task-clm .heading .right {
+    background-color: #334155;
+    color: #FFFFFF;
+
+    min-width: 28px;
+    height: 28px;
+    padding: 0 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================
+   TASK CARDS
+========================= */
+
+section .task-clm .task {
+    background-color: var(--bg-task-color);
+    color: #0F172A;
+
+    padding: var(--padding-lg);
+    border: 1px solid #E2E8F0;
+    border-left: 4px solid var(--accent-color);
+
+    border-radius: var(--border-radius-md);
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    cursor: grab;
+    box-shadow: var(--shadow-card);
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+section .task-clm .task:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+section .task-clm .task:active {
+    cursor: grabbing;
+}
+
+.task h3 {
+    color: #0F172A;
+    font-size: 15px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.task p {
+    color: var(--task-text-color);
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Delete button */
+section .task-clm .task button {
+    align-self: flex-end;
+    cursor: pointer;
+
+    padding: 7px 12px;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+
+    background-color: #FEE2E2;
+    color: #B91C1C;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: background-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+section .task-clm .task button:hover {
+    background-color: #FECACA;
+    transform: translateY(-1px);
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+
+    height: 100vh;
+    width: 100vw;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--padding-lg);
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal .bg {
+    position: absolute;
+    inset: 0;
+
+    background-color: var(--modal-overlay);
+    backdrop-filter: blur(6px);
+}
+
+.modal .center {
+    position: relative;
+    z-index: 10;
+
+    width: 100%;
+    max-width: 440px;
+
+    background-color: #1E293B;
+    border: 1px solid #334155;
+
+    padding: var(--padding-xxl);
+    border-radius: var(--border-radius-lg);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-md);
+
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Modal inputs */
+.modal .center input,
+.modal .center textarea {
+    width: 100%;
+
+    background-color: #0F172A;
+    border: 1px solid #334155;
+    outline: none;
+
+    color: var(--primary-text-color);
+    padding: 12px;
+
+    border-radius: var(--border-radius-sm);
+    font: inherit;
+
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.modal .center input::placeholder,
+.modal .center textarea::placeholder {
+    color: var(--muted-text-color);
+}
+
+.modal .center input:focus,
+.modal .center textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.modal .center textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Modal Add button */
+.modal .center button {
+    background-color: var(--accent-color);
+    padding: 11px 20px;
+
+    cursor: pointer;
+    border: none;
+    outline: none;
+
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+
+    border-radius: var(--border-radius-md);
+    width: fit-content;
+    align-self: flex-end;
+
+    transition: background-color 0.2s ease;
+}
+
+.modal .center button:hover {
+    background-color: var(--accent-hover);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+    section.board {
+        flex-direction: column;
+        padding: 16px;
+        gap: 16px;
+    }
+
+    section .task-clm {
+        min-height: 180px;
+    }
+
+    nav {
+        padding: 16px;
+    }
+
+    nav .left {
+        font-size: 21px;
+    }
+
+    .modal .center {
+        padding: var(--padding-xl);
+    }
+}
